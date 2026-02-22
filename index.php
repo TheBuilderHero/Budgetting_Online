@@ -27,7 +27,7 @@
             echo "<div class='result-text'><strong>($date):</strong> $desc — $$amount</div>";
 			
 			//send data to database
-            $mySQLOnlineDB.sendNewExpense($desc,$date, $amount, $notes);
+            $mySQLOnlineDB->sendNewExpense($desc,$date, $amount, $notes);
 			
 		} else {
             echo "<div class='result-text'>Enter a new expense below.</div>";

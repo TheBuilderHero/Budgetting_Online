@@ -80,6 +80,16 @@ class SQLConnect {
         
         $statement->close();
     }
+
+    public function insertContact($name, $email, $phone){
+        $sql = "INSERT INTO contacts (Name, Email, Phone) VALUES (?,?,?)";
+
+        $statement = $this->connection->prepare($sql);
+
+        $statement->bind_param("sss", $name, $email, $phone);
+
+        return $statement->execute();
+    }
 }
 
 ?>
