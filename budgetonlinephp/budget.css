@@ -1,0 +1,53 @@
+/* table container for top nav bar */
+.table-container {
+    padding: 90px 20px; /* 40px top/bottom, 20px sides */
+}
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-width: 400px;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+}
+
+.styled-table thead tr {
+    background-color: #009879; /* A nice forest green */
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.styled-table th, .styled-table td {
+    padding: 12px 15px;
+}
+
+/* Zebra Striping */
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+/* Hover effect to make rows "pop" */
+.styled-table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Make specific columns (like Amount) bold or aligned */
+.styled-table td:nth-child(3) {
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: right;
+}

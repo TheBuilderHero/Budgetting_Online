@@ -1,0 +1,81 @@
+
+    body {
+        padding-top: 70px; /* to prevent interactions with the top menu*/
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7f6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh; /* Changed to min-height for better mobile scaling */
+        margin: 0;
+    }
+
+    .form-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        width: 350px; /* Slightly wider for dates */
+    }
+
+    /* Target all input types consistently */
+
+    input[type="tel"],
+    input[type="email"],
+    input[type="text"], 
+    input[type="date"], 
+    input[type="number"]{
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0 16px 0;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+        font-family: inherit; /* Ensures consistent font in date picker */
+    }
+
+    input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #555;
+    }
+
+    button {
+        width: 100%;
+        background-color: #007bff;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.1s;
+        margin-top: 10px;
+    }
+
+    button:hover { background-color: #0056b3; }
+    button:active { transform: scale(0.98); }
+
+    .result-container {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .result-header { color: #007bff; font-weight: bold; margin-bottom: 5px; }
+    .result-text { font-size: 0.95rem; color: #333; line-height: 1.4; }
+
+    /* images auto resize in the whole project.*/
+    .form-card img {
+        width: 100%;       /* Forces image to span the full width of the card */
+        height: auto;      /* Keeps the image from looking squished */
+        border-radius: 8px; /* Matches your card's rounded aesthetic */
+        margin-bottom: 15px; /* Adds spacing between the image and the labels/inputs */
+        display: block;    /* Removes extra white space at the bottom of the image */
+    }
