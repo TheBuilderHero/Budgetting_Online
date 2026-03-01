@@ -46,8 +46,14 @@
 }
 
 /* Make specific columns (like Amount) bold or aligned */
+.styled-table th:nth-child(3) {
+    text-align: right;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 .styled-table td:nth-child(3) {
+    text-align: right;
     font-weight: bold;
     color: #2c3e50;
-    text-align: right;
+    font-family: 'Courier New', monospace;
 }

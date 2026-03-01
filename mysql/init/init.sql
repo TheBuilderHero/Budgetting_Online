@@ -1,0 +1,14 @@
+CREATE TABLE transactions (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Description VARCHAR(255) NOT NULL,
+    Date DATE NOT NULL,
+    Amount DECIMAL(10, 2) NOT NULL,
+    Notes TEXT
+);
+
+CREATE TABLE contacts (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(150),
+    Phone VARCHAR(20)
+);

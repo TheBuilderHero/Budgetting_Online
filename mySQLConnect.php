@@ -3,10 +3,29 @@
 //for fetching data from the SQL database
 class SQLConnect {
 
+/*
+
+CREATE TABLE transactions (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Description VARCHAR(255) NOT NULL,
+    Date DATE NOT NULL,
+    Amount DECIMAL(10, 2) NOT NULL,
+    Notes TEXT
+);
+
+CREATE TABLE contacts (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(150),
+    Phone VARCHAR(20)
+);
+
+ */
+
     // SQL Database Credentials
-    private $host = "localhost";
-    private $user = "root";
-    private $pass = "";
+    private $host = "mysql";
+    private $user = "user";
+    private $pass = "password"; 
     private $db = ""; // usually "budgetting_online"
 
     //data for database
@@ -18,7 +37,7 @@ class SQLConnect {
     //connection esablished:
     private $connection;
 
-    public function __construct($database){
+    public function __construct($database = "budgetonline"){
         $this->db = $database;		
         
         //connect
@@ -61,7 +80,7 @@ class SQLConnect {
         $this->notes = $notes;
 
         // Send data to datebase:
-        $statement = $this->connection->prepare("INSERT INTO              `running_expenses_2026` (`Description`, `Date`, `Amount`, `Notes`)
+        $statement = $this->connection->prepare("INSERT INTO `transactions` (`Description`, `Date`, `Amount`, `Notes`)
             VALUES (?,?,?,?)"); 
 
         //malicious code prevention:

@@ -1,6 +1,6 @@
 <?php
     include "mySQLConnect.php";
-    $contactDB = new SQLConnect("budgetting_online");
+    $contactDB = new SQLConnect();
 
     // Grab data from the POST request
     $name  = $_POST['Name'];

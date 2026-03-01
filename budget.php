@@ -15,7 +15,7 @@
             echo "<br>";
         }*/
         
-        $budgettingOnline = new SQLConnect("budgetting_online");        
+        $budgettingOnline = new SQLConnect();        
         
         /*foreach ($budgettingOnline->streamExpenseRows("running_expenses_2026") as $row){
             echo "<pre>";
@@ -35,7 +35,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($budgettingOnline->streamExpenseRows("expense_2025") as $row): ?>
+                    <?php foreach ($budgettingOnline->streamExpenseRows("transactions") as $row): ?>
                     <tr>
                         <td><?= htmlspecialchars($row['Date']) ?></td>
                         <td><?= htmlspecialchars($row['Description']) ?></td>

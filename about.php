@@ -11,7 +11,7 @@
     <form action="process_contact.php" method="POST" class="form-card"> 
         <!-- Header Section -->
         <div class="result-container">
-            <img src="dakota.jpeg" alt="Picture of Dakota Stephens">
+            <img src="./images/dakota.JPEG" alt="Picture of Dakota Stephens">
 
             <div class="result-header">Contact Information</div>
             <div class="result-text">Software Engineer & AI Enthusiast</div>

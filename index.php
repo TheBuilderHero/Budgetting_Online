@@ -13,7 +13,7 @@
         <?php
         //create connection to database:
 
-        $mySQLOnlineDB = new SQLConnect("budgetting_online");
+        $mySQLOnlineDB = new SQLConnect();
 
 
         // Only show "Previous Expense" if form was submitted
