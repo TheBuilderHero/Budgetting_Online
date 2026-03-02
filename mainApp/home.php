@@ -37,6 +37,26 @@
 
 
     <form method="post" action="">
+        <label for="table_select">Select a Database Table:</label>
+        <select name="table_name" id="table_select">
+            
+            <?php
+
+            $ignored_tables = $mySQLOnlineDB->getIngnoreArray();
+
+            
+            //Loop through results and create options
+            // SHOW TABLES returns the table name in the first column (index 0)
+            $result = $mySQLOnlineDB->getTables();
+            while ($row = mysqli_fetch_array($result)) {
+                $tableName = $row[0];
+                if (!in_array($tableName, $ignored_tables)){
+                    echo '<option value="' . htmlspecialchars($tableName) . '">' . htmlspecialchars($tableName) . '</option>';
+                }
+            }
+            ?>
+            
+        </select>
         <label for="Description">Description</label>
         <input type="text" name="Description" id="Description" placeholder="Lunch, Rent, etc." required>
         

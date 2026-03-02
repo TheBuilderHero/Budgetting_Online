@@ -20,6 +20,8 @@ CREATE TABLE contacts (
     Phone VARCHAR(20)
 );
 
+insert into users (Username, Passhash) values ('kota', '$2y$10$BW94fPShe8djmec3EFiDZeF5MnSYIozefusCdEokijaoKvNGzk6TW');
+
  */
 
     // SQL Database Credentials
@@ -36,6 +38,10 @@ CREATE TABLE contacts (
 
     //connection esablished:
     private $connection;
+
+    public function getIngnoreArray(){
+        return ['contacts', 'users'];
+    }
 
     public function __construct($database = "budgetonline"){
         $this->db = $database;		
@@ -132,6 +138,13 @@ CREATE TABLE contacts (
             $stmt->close();
         }
         return false; // Login failed
+    }
+
+    public function getTables(){
+        $sql = "SHOW TABLES";
+
+        //Query to get table names
+        return $result = mysqli_query($this->connection, $sql);
     }
 
 }
