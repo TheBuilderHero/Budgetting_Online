@@ -76,7 +76,7 @@
     </div>
     <h2><?php echo ($status_class == "success") ? "Awesome!" : "Error"; ?></h2>
     <p><?php echo $message; ?></p>
-    <a href="index.php" class="btn-back">Return to Form</a>
+    <a href="home.php" class="btn-back">Return to Form</a>
 </div>
 
 </body>

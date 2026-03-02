@@ -1,3 +1,14 @@
+<?php
+
+session_start(); //resume session
+
+// Check if the user is already logged in, if yes then redirect him to welcome page
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
+    header("location: ../index.php");
+    exit;
+}
+
+?>
 
 <style>
     .topnav {
@@ -45,18 +56,32 @@
         border-color: #007bff;     /* Border matches text */
         transform: translateY(-2px); /* Tiny "pop" up effect */
     }
+    .topnav a.logout-btn {
+        border-color: #ffcccc; /* Soft red border */
+        color: #dc3545;        /* Red text */
+        font-size: 0.9em;      /* Slightly smaller */
+        padding: 8px 15px;     /* More compact */
+    }
+
+    .topnav a.logout-btn:hover {
+        background-color: #fff5f5;
+        border-color: #dc3545;
+        color: #a71d2a;
+    }
+
 </style>
 
 
 <nav class="topnav">
     <ul>
         <div class="menucontainer">
-            <li class="menuitem"><a href="index.php">Home</a></li>
+            <li class="menuitem"><a href="home.php">Home</a></li>
             <li class="menuitem"><a href="budget.php">Budget Data</a></li>
             <!-- Maybe add settings back later but for now we dont need it.
             <li class="menuitem"><a href="settings.php">Settings</a></li> 
             -->
             <li class="menuitem"><a href="about.php">About</a></li>
+            <li class="menuitem"><a href="logout.php" class="logout-btn">Logout</a></li>
         </div>  
     </ul>
 </nav>

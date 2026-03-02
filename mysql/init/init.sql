@@ -12,3 +12,9 @@ CREATE TABLE contacts (
     Email VARCHAR(150),
     Phone VARCHAR(20)
 );
+
+CREATE TABLE users (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(100) NOT NULL,
+    Passhash VARCHAR(255) NOT NULL
+);
