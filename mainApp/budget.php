@@ -1,104 +1,138 @@
 <!DOCTYPE html>
 <html>
     <?php include 'nav.php'; ?>
-
-    <!-- get budget table style sheet-->
     <link rel="stylesheet" href="budget.css">
+<body>
 
+<?php
+include 'mySQLConnect.php';
+$budgettingOnline = new SQLConnect();
 
-    <body>
+// 1. Determine the Type (Expense vs Gas)
+$viewType = $_GET['view_type'] ?? 'expense'; 
+$ignored = $budgettingOnline->getIngnoreArray();
 
-        <?php
-        include 'mySQLConnect.php';
+// 2. Get the correct table list based on type
+if ($viewType === 'gas') {
+    $available_tables = array_values(array_diff($budgettingOnline->getMileageTables(), $ignored));
+    $defaultTable = 'vehicle_logs';
+    $tableLabel = "View Mileage From:";
+} else {
+    $available_tables = array_values(array_diff($budgettingOnline->getExpenseTables(), $ignored));
+    $defaultTable = 'transactions';
+    $tableLabel = "View Expenses From:";
+}
 
-        /*for($i = 10; $i < 30; $i++){
-            echo "<br>";
-        }*/
-        
-        $budgettingOnline = new SQLConnect();        
-        
-        /*foreach ($budgettingOnline->streamExpenseRows("running_expenses_2026") as $row){
-            echo "<pre>";
-            print_r($row);
-            echo "</pre>";
-        }*/
-        
-        ?>
-        <div class="table-container">
-            <?php
-            
-            $ignored_tables = $budgettingOnline->getIngnoreArray();
-            $available_tables = [];
+// 3. Determine specific table selection
+$selectedViewTable = $_GET['view_table'] ?? '';
+if (!in_array($selectedViewTable, $available_tables)) {
+    $selectedViewTable = in_array($defaultTable, $available_tables) ? $defaultTable : ($available_tables[0] ?? null);
+}
+?>
 
-            // 1. Get all valid tables first
-            $tableResult = $budgettingOnline->getTables();
-            while ($tableRow = mysqli_fetch_array($tableResult)) {
-                if (!in_array($tableRow[0], $ignored_tables)) {
-                    $available_tables[] = $tableRow[0];
-                }
-            }
+<div class="table-container">
+    <!-- View Type and Table Selector -->
+    <form method="GET" action="" id="viewForm" style="margin-bottom: 20px;">
+        <div class="view-controls">
+            <label for="view_type">Entry Type:</label>
+            <select name="view_type" id="view_type" onchange="this.form.submit()">
+                <option value="expense" <?= ($viewType === 'expense') ? 'selected' : '' ?>>Expenses</option>
+                <option value="gas" <?= ($viewType === 'gas') ? 'selected' : '' ?>>Gas/Mileage</option>
+            </select>
 
-            // 2. Determine which table to show:
-            // Priority 1: What the user just selected via GET
-            // Priority 2: 'transactions' (if it exists)
-            // Priority 3: The first table in the database
-            if (isset($_GET['view_table']) && in_array($_GET['view_table'], $available_tables)) {
-                $selectedViewTable = $_GET['view_table'];
-            } elseif (in_array('transactions', $available_tables)) {
-                $selectedViewTable = 'transactions';
-            } else {
-                $selectedViewTable = $available_tables[0] ?? null; // Fallback to first available or null
-            }
+            <label for="view_table" style="margin-left:20px;"><?= $tableLabel ?></label>
+            <select name="view_table" id="view_table" onchange="this.form.submit()">
+                <?php foreach ($available_tables as $tableName): ?>
+                    <option value="<?= htmlspecialchars($tableName) ?>" <?= ($tableName === $selectedViewTable) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($tableName) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </form>
+
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <?php if ($viewType === 'gas'): ?>
+                    <th>Date</th>
+                    <th class="numeric">MPG</th>
+                    <th class="numeric">Trip Miles</th>
+                    <th class="numeric">Total ($)</th>
+                    <th class="numeric">Price/Gal</th>
+                    <th>Notes</th>
+                <?php else: ?>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th class="numeric">Amount</th>
+                    <th>Notes</th>
+                <?php endif; ?>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            if ($selectedViewTable):
+                // Use the correct stream function based on type
+                $rows = ($viewType === 'gas') 
+                    ? $budgettingOnline->streamMileageRows($selectedViewTable) 
+                    : $budgettingOnline->streamExpenseRows($selectedViewTable);
+
+                foreach ($rows as $row): 
             ?>
-
-            <!-- Table Selector Form -->
-            <form method="GET" action="" style="margin-bottom: 20px;">
-                <label for="view_table">View Expenses From:</label>
-                <select name="view_table" id="view_table" onchange="this.form.submit()">
-                    <?php if (empty($available_tables)): ?>
-                        <option value="">No tables found</option>
+                <tr>
+                    <?php if ($viewType === 'gas'): ?>
+                        <td><?= htmlspecialchars($row['Date']) ?></td>
+                        <td class="numeric"><?= number_format($row['MPG'], 1) ?></td>
+                        <td class="numeric"><?= number_format($row['Trip'], 1) ?></td>
+                        <td class="numeric">$<?= number_format($row['Total'], 2) ?></td>
+                        <td class="numeric">$<?= number_format($row['PricePerGallon'], 3) ?></td>
+                        <td><?= htmlspecialchars($row['Notes']) ?></td>
                     <?php else: ?>
-                        <?php foreach ($available_tables as $tableName): ?>
-                            <option value="<?= htmlspecialchars($tableName) ?>" <?= ($tableName === $selectedViewTable) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($tableName) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
-            </form>
-
-    <!-- The Data Table -->
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Amount</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    if ($selectedViewTable):
-                        $expenseRows = $budgettingOnline->streamExpenseRows($selectedViewTable);
-                        foreach ($expenseRows as $row): 
-                    ?>
-                    <tr>
                         <td><?= htmlspecialchars($row['Date']) ?></td>
                         <td><?= htmlspecialchars($row['Description']) ?></td>
-                        <td>$<?= number_format($row['Amount'], 2) ?></td>
+                        <td class="numeric">$<?= number_format($row['Amount'], 2) ?></td> 
                         <td><?= htmlspecialchars($row['Notes']) ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr><td colspan="4" style="text-align:center;">No data available.</td></tr>
-                <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+                    <?php endif; ?>
+                </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr><td colspan="6" style="text-align:center;">No tables or data found.</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
 
 
+    <script>
+        // Get the button element
+        let mybutton = document.getElementById("backToTopBtn");
+
+        // When the user scrolls down, call scrollFunction
+        window.onscroll = function() { scrollFunction() };
+
+        function scrollFunction() {
+            // Show button after 800px (roughly 20 rows of data)
+            if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, and Opera
+        }
+    </script>
 
 
-    </body>
+    <button onclick="topFunction()" id="backToTopBtn" title="Go to top">
+        <svg xmlns="http://www.w3.org" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+
+</body>
 </html>

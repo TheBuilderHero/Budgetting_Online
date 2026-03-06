@@ -23,11 +23,11 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - budgetonline
+      - other_db
     networks:
       - app-network
 
-  budgetonline:
+  other_db:
     image: mysql:8.0
     volumes:
       - ./mysql/init:/docker-entrypoint-initdb.d
@@ -35,7 +35,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: budgetonline
+      MYSQL_DATABASE: other_db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
@@ -43,8 +43,25 @@ services:
     networks:
       - app-network
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=other_db
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    depends_on:
+      - other_db
+    networks:
+      - app-network
+
 networks:
   app-network:
+
 
 
 # The commented out section below is an example of how to define a PostgreSQL
