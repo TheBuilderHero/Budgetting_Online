@@ -19,6 +19,7 @@
 services:
   php:
     build: .
+    image: thebuilderhero/budgetonline:1.0 #image to be built
     container_name: server-1
     ports:
       - "80:80"
@@ -29,8 +30,11 @@ services:
 
   other_db:
     image: mysql:8.0
-    volumes:
-      - ./mysql/init:/docker-entrypoint-initdb.d
+    build: # this allows for running and building SQL remote.
+      context: .
+      dockerfile: Dockerfile.mysql
+    #volumes:
+    #  - ./mysql/init:/docker-entrypoint-initdb.d
     container_name: mysql
     restart: always
     environment:

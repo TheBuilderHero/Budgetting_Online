@@ -5,6 +5,7 @@ class SQLConnect {
 
 
     // SQL Database Credentials
+    //private $host = "other_db"; old not working option.
     private $host = "other_db";
     private $user = "user";
     private $pass = "password"; 
